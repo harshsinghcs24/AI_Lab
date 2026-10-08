@@ -1,6 +1,5 @@
 import heapq
 
-# Initial and Goal States
 initial = (
     (2, 8, 3),
     (1, 6, 4),
@@ -13,10 +12,6 @@ goal = (
     (7, 6, 5)
 )
 
-
-# ---------------------------------------------------
-# Heuristic 1: Number of Tiles Out of Place
-# ---------------------------------------------------
 def misplaced_tiles(state, goal):
     count = 0
 
@@ -28,10 +23,6 @@ def misplaced_tiles(state, goal):
 
     return count
 
-
-# ---------------------------------------------------
-# Heuristic 2: Manhattan Distance
-# ---------------------------------------------------
 def manhattan_distance(state, goal):
     distance = 0
 
@@ -51,19 +42,13 @@ def manhattan_distance(state, goal):
 
     return distance
 
-
-# ---------------------------------------------------
-# Generate all possible neighbouring states
-# ---------------------------------------------------
 def get_neighbors(state):
 
-    # Find blank position
     for i in range(3):
         for j in range(3):
             if state[i][j] == 0:
                 row, col = i, j
 
-    # Up, Down, Left, Right
     moves = [
         (-1, 0),
         (1, 0),
@@ -79,24 +64,17 @@ def get_neighbors(state):
 
         if 0 <= new_row < 3 and 0 <= new_col < 3:
 
-            # Convert tuple to list
             new_state = [list(r) for r in state]
 
-            # Swap blank with adjacent tile
             new_state[row][col], new_state[new_row][new_col] = \
                 new_state[new_row][new_col], new_state[row][col]
 
-            # Convert back to tuple
             new_state = tuple(tuple(r) for r in new_state)
 
             neighbors.append(new_state)
 
     return neighbors
 
-
-# ---------------------------------------------------
-# Print puzzle
-# ---------------------------------------------------
 def print_state(state):
 
     for row in state:
@@ -104,14 +82,8 @@ def print_state(state):
 
     print()
 
-
-# ---------------------------------------------------
-# A* Search
-# ---------------------------------------------------
 def a_star(initial, goal, heuristic):
 
-    # Priority queue
-    # (f, g, state, path)
     open_list = []
 
     h = heuristic(initial, goal)
@@ -120,24 +92,20 @@ def a_star(initial, goal, heuristic):
 
     heapq.heappush(open_list, (f, g, initial, [initial]))
 
-    # Store best cost found for each state
     visited = {}
 
     while open_list:
 
         f, g, current, path = heapq.heappop(open_list)
 
-        # Goal reached
         if current == goal:
             return path, g
 
-        # Ignore if a better path already exists
         if current in visited and visited[current] <= g:
             continue
 
         visited[current] = g
 
-        # Generate neighbouring states
         for neighbor in get_neighbors(current):
 
             new_g = g + 1
@@ -153,10 +121,6 @@ def a_star(initial, goal, heuristic):
 
     return None, -1
 
-
-# ===================================================
-# CASE 1: Tiles Out of Place
-# ===================================================
 
 print("======================================")
 print("CASE 1: TILES OUT OF PLACE")
@@ -185,11 +149,6 @@ if path:
         print("h(n) =", h)
         print("f(n) =", f)
         print("--------------------------------")
-
-
-# ===================================================
-# CASE 2: Manhattan Distance
-# ===================================================
 
 print("\n======================================")
 print("CASE 2: MANHATTAN DISTANCE")
